@@ -1,41 +1,54 @@
-import React from 'react';
+import React from "react";
+import { Flex, Box, Heading, Button, useColorMode } from "@chakra-ui/react";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  NavLink
 } from "react-router-dom";
-import States from '../Pages/States';
-import USA from '../Pages/USA';
 
-const Navigation = () => {
-    return ( 
-        <Router>
-          <header>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">USA</Link>
-                    </li>
-                    <li>
-                        <Link to="/states">State Trends</Link>
-                    </li>
-                </ul>
-            </nav>
-          </header>
+import USA from "../Pages/USA";
+import States from "../Pages/States";
 
-            <Switch>
-                <Route exact path="/">
-                    <USA />
-                </Route>
-                <Route path="/states">
-                    <States />
-                </Route>
-            </Switch>
+const Header = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
 
-        </Router>
-      
-     );
-}
- 
-export default Navigation;
+  return (
+    <Router>
+      <Flex
+        justify="space-between"
+        alignItems="center"
+        boxShadow="rgb(0 0 0 / 5%) 0px 1px 2px 0px"
+        padding="1.2rem"
+      >
+        <Box>
+          <Heading size="md">Covid-19 Tracker</Heading>
+        </Box>
+        <Flex as="nav" justify="space-between" alignItems="center">
+          <Box mr="16px">
+            <NavLink to="/">USA</NavLink>
+          </Box>
+          <Box mr="16px">
+            <NavLink to="/states">States</NavLink>
+          </Box>
+          <Button onClick={toggleColorMode}>
+            {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+          </Button>
+        </Flex>
+      </Flex>
+
+      {/* Routes */}
+      <Switch>
+        <Route exact path="/">
+          <USA />
+        </Route>
+        <Route exact path="/states">
+          <States />
+        </Route>
+      </Switch>
+    </Router>
+  );
+};
+
+export default Header;

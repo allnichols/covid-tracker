@@ -2,9 +2,9 @@ import Navigation from './navigation/navigation';
 
 function App() {
   return (
-    <div className="App">
-      <Navigation />
-    </div>
+        <div className="App">
+           <Navigation />
+        </div>
   );
 }
 
