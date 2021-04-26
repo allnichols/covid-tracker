@@ -2,7 +2,6 @@ import React from "react";
 import { Flex, Box, Heading, Button, useColorMode } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   NavLink
@@ -15,7 +14,7 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Router>
+    <>
       <Flex
         justify="space-between"
         alignItems="center"
@@ -47,7 +46,7 @@ const Header = () => {
           <States />
         </Route>
       </Switch>
-    </Router>
+      </>
   );
 };
 
