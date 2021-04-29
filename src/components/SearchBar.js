@@ -4,60 +4,60 @@ import { SearchIcon } from '@chakra-ui/icons';
 
 const SearchBar = () => {
   const [options, setOptions] = useState([]);
-
+  const [search, setSearch] = useState('');
+  const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
       getDataFromApi();
   }, []);
 
   const getDataFromApi = () => {
-    console.log("Options Fetched from API")
-
-      Promise.all([
-        fetch(`https://api.covidactnow.org/v2/counties.json?apiKey=db851a7fa0434131ad626738b50e2c0a`),
-        fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`),
-      ]).then( function(response){
-          return Promise.all(response.map(function (response){
-            return response.json();
-          }));
+     
+      fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
+      .then( function(response){
+        return response.json()
       }).then(function (data){
+        console.log(data);
           setOptions(data)
       }).catch(function (error){
           console.log(error);
       })
   }
 
-  const search = (arr, e) => {
-  //   function binarySearch(arr, elem) {
-  //     var start = 0;
-  //     var end = arr.length - 1;
-  //     var middle = Math.floor((start + end) / 2);
-  //     while(arr[middle] !== elem && start <= end) {
-  //         if(elem < arr[middle]){
-  //             end = middle - 1;
-  //         } else {
-  //             start = middle + 1;
-  //         }
-  //         middle = Math.floor((start + end) / 2);
-  //     }
-  //     if(arr[middle] === elem){
-  //         return middle;
-  //     }
-  //     return -1;
-  // }
-  }
-      
-  
+
+  useEffect(() => {
+     if(options.length > 0){
+       setFiltered(
+         options.filter( (item, i) => {
+           let state = item.url.replaceAll('https://covidactnow.org/us/', '');
+           
+           if(search.length >= 1 && state.toLowerCase().includes( search.toLowerCase() )){
+              return item;
+           }
+         })
+       )
+     }
+  }, [search, options])
 
     return ( 
+    <>
       <InputGroup>
         <Input
          placeholder="City, county, or state"
          padding="24px"
          borderRadius="99px"
-          />
+         onChange={(e) => setSearch(e.target.value)} />
         <InputRightElement children={<SearchIcon marginTop="12px" marginRight="16px" />} />
       </InputGroup>
+      {filtered.map( item => {
+        return (
+            <div>
+              <p>{item.state}</p>
+              <p>{item.riskLevels.overall}</p>
+            </div>
+          )
+      })}
+    </>
      );
 }
  
