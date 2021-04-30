@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { InputGroup, Input, InputRightElement } from '@chakra-ui/react';
+import { InputGroup, Input, InputRightElement, Text, Flex } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 
 const SearchBar = () => {
@@ -50,11 +50,20 @@ const SearchBar = () => {
         <InputRightElement children={<SearchIcon marginTop="12px" marginRight="16px" />} />
       </InputGroup>
       {filtered.map( item => {
+
+        let stateName = item.url.replaceAll('https://covidactnow.org/us/', '')
+
         return (
-            <div>
-              <p>{item.state}</p>
+            <Flex>
               <p>{item.riskLevels.overall}</p>
-            </div>
+
+              <Text
+                  textTransform="capitalize"
+                  fontWeight="bold"
+              >
+                {stateName.substr(0, stateName.length - 3).replaceAll('_', ' ')}
+              </Text>
+            </Flex>
           )
       })}
     </>
