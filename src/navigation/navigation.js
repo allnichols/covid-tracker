@@ -9,6 +9,7 @@ import {
 
 import USA from "../Pages/USA";
 import States from "../Pages/States";
+import State from "../Pages/State";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -44,6 +45,9 @@ const Header = () => {
         </Route>
         <Route exact path="/states">
           <States />
+        </Route>
+        <Route path="/:state">
+          <State/>
         </Route>
       </Switch>
       </>
