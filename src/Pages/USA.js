@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Container } from '@chakra-ui/react';
 
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/search/SearchBar';
 
 const USA = () => {
     const [data, setData] = useState({});
