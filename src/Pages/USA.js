@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Container } from '@chakra-ui/react';
 
 import SearchBar from '../components/search/SearchBar';
+import Map from '../components/map/Map';
 
 const USA = () => {
     const [data, setData] = useState({});
@@ -24,6 +25,7 @@ const USA = () => {
     return ( 
         <Container centerContent marginTop="24px">
             <SearchBar />
+            <Map />
         </Container>
      );
 }

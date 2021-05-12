@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Flex, Link, Box  } from '@chakra-ui/react';
+import { Text, Flex, Link, Box } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Link as ReactRouter } from "react-router-dom";
 import { motion } from 'framer-motion';
@@ -78,4 +78,3 @@ const SearchItem = ({name, riskLevel, population}) => {
 
  
 export default SearchItem;
-

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { InputGroup, Input, InputRightElement } from '@chakra-ui/react';
+import { InputGroup, Input, InputRightElement, Box } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import SearchItem from './searchItem'
 
@@ -50,6 +50,11 @@ const SearchBar = () => {
          onChange={(e) => setSearch(e.target.value)} />
         <InputRightElement children={<SearchIcon marginTop="12px" marginRight="16px" />} />
       </InputGroup>
+    <Box 
+      w="100%"
+      overflowY="scroll"
+      display="flex"
+      flexDirection="column">
       {filtered.map( item => {
 
         let stateName = item.url.replaceAll('https://covidactnow.org/us/', '')
@@ -64,6 +69,7 @@ const SearchBar = () => {
            
           )
       })}
+      </Box>
     </>
      );
 }
