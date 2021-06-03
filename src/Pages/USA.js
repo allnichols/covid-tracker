@@ -4,6 +4,7 @@ import { Container } from '@chakra-ui/react';
 
 import SearchBar from '../components/search/SearchBar';
 import Map from '../components/map/Map';
+import MapLegend from '../components/map/Legend';
 
 const USA = () => {
     const [data, setData] = useState({});
@@ -26,6 +27,7 @@ const USA = () => {
         <Container centerContent marginTop="24px">
             <SearchBar />
             <Map />
+            <MapLegend />
         </Container>
      );
 }

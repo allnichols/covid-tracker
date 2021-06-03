@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
-import { ComposableMap, Geographies, Geography } from "react-simple-maps"
+import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { Box } from "@chakra-ui/react";
 import ReactTooltip from "react-tooltip";
-import { scaleQuantile } from "d3-scale";
 import { NavLink } from "react-router-dom"; 
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
@@ -16,15 +16,6 @@ const Map = ({ category }) => {
          .then(response => setMapData(response))
     }, []);
 
-    const colorScale = scaleQuantile()
-            .domain(mapData.map(d => d.riskLevels.overall))
-            .range([
-                "#00d474",
-                "#ffc900",
-                "#ff9600",
-                "#d9002c",
-                "#790019"
-            ]);
 
     const riskLevelCheck = (num) => {
                 switch (num) {
