@@ -26,6 +26,24 @@ const Map = ({ category }) => {
                 "#790019"
             ]);
 
+    const riskLevelCheck = (num) => {
+                switch (num) {
+                  case 0:
+                    return "#00d474";
+                  case 1:
+                    return "#ffc900";
+                  case 2:
+                    return "#ff9600";
+                  case 3:
+                    return "#d9002c";
+                  case 4:
+                    return "#790019";
+                  default:
+                    break;
+                
+                }
+            };
+
     return (
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
@@ -34,13 +52,16 @@ const Map = ({ category }) => {
                         {({geographies}) => {
                             return geographies.map(geo => {
                                 let state = mapData.find( s => s.fips === geo.id);
-                                console.log(state)
+                            
                                 return (
                                     <NavLink to={geo.properties.name}>
                                         <Geography 
                                             key={geo.rsmKey}
                                             geography={geo}
-                                            fill={ state ? colorScale(state.riskLevels.overall) : '#eee' }
+                                            fill={ state ? riskLevelCheck(state.riskLevels.overall) : '#eee' }
+                                            strokeWidth={'2px'}
+                                            fillOpacity={'1px'}
+                                            stroke={"white"}
                                         />
                                     </NavLink>
                                 )
