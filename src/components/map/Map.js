@@ -30,8 +30,7 @@ const Map = ({ category }) => {
                   case 4:
                     return "#790019";
                   default:
-                    break;
-                
+                    break;  
                 }
             };
 
