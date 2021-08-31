@@ -9,7 +9,6 @@ import MapLegend from '../components/map/Legend';
 const USA = () => {
     const [data, setData] = useState({});
 
-
     // useEffect(() => {
     //     fetch(`https://api.covidactnow.org/v2/counties.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
     //         .then(res => res.json())

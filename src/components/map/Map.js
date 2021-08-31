@@ -9,9 +9,9 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 const Map = ({ category }) => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
-
+    console.log(process.env)
     useEffect(() => {
-         fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
+         fetch(`https://api.covidactnow.org/v2/states.json?apiKey=${process.env.REACT_APP_API_ENDPOINT_KEY}`)
          .then(response => response.json())
          .then(response => setMapData(response))
     }, []);
@@ -29,11 +29,11 @@ const Map = ({ category }) => {
                     return "#d9002c";
                   case 4:
                     return "#790019";
-                  default:
-                    break;  
+                  case 5: 
+                    return "#790019";
+                  default:  
                 }
             };
-
     return (
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
@@ -42,7 +42,7 @@ const Map = ({ category }) => {
                         {({geographies}) => {
                             return geographies.map(geo => {
                                 let state = mapData.find( s => s.fips === geo.id);
-                            
+                                
                                 return (
                                     <NavLink to={geo.properties.name}>
                                         <Geography 
@@ -52,6 +52,7 @@ const Map = ({ category }) => {
                                             strokeWidth={'2px'}
                                             fillOpacity={'1px'}
                                             stroke={"white"}
+                                            onMouseEnter={() => setTooltipContent(geo.properties.name)}
                                         />
                                     </NavLink>
                                 )
@@ -60,7 +61,9 @@ const Map = ({ category }) => {
                         }}
                     </Geographies>
                 )}
+
             </ComposableMap>
+            <ReactTooltip>{tooltipContent}</ReactTooltip>
         </>
     )
 
