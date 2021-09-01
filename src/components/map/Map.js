@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { Box } from "@chakra-ui/react";
+import { Heading, Box } from "@chakra-ui/react";
 import ReactTooltip from "react-tooltip";
 import { NavLink } from "react-router-dom"; 
 
@@ -9,7 +9,7 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 const Map = ({ category }) => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
-    console.log(process.env)
+
     useEffect(() => {
          fetch(`https://api.covidactnow.org/v2/states.json?apiKey=${process.env.REACT_APP_API_ENDPOINT_KEY}`)
          .then(response => response.json())
@@ -35,16 +35,16 @@ const Map = ({ category }) => {
                 }
             };
     return (
-        <>
+        <Box marginTop="16">
+            <Heading as="h2" size="xl" textAlign="center" marginBottom="-35px">Risk Levels</Heading>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 {mapData === null ? null : (
                     <Geographies geography={geoUrl}>
                         {({geographies}) => {
-                            return geographies.map(geo => {
+                            return geographies.map((geo, i) => {
                                 let state = mapData.find( s => s.fips === geo.id);
-                                
                                 return (
-                                    <NavLink to={geo.properties.name}>
+                                    <NavLink to={`${geo.properties.name}?state=${state ? state.state : 'none'}`}>
                                         <Geography 
                                             key={geo.rsmKey}
                                             geography={geo}
@@ -64,7 +64,7 @@ const Map = ({ category }) => {
 
             </ComposableMap>
             <ReactTooltip>{tooltipContent}</ReactTooltip>
-        </>
+        </Box>
     )
 
 }

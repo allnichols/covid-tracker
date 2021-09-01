@@ -41,10 +41,12 @@ const SearchBar = () => {
   }, [search, options])
 
     return ( 
-    <>
+    <Box width="70%">
       <InputGroup>
         <Input
          placeholder="Search States"
+         _placeholder={{color: 'black'}}
+         color="black"
          padding="24px"
          borderRadius="99px"
          onChange={(e) => setSearch(e.target.value)} />
@@ -70,7 +72,7 @@ const SearchBar = () => {
           )
       })}
       </Box>
-    </>
+    </Box>
      );
 }
  

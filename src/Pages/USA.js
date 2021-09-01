@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container } from '@chakra-ui/react';
+import { Container, Heading } from '@chakra-ui/react';
 
 import SearchBar from '../components/search/SearchBar';
 import Map from '../components/map/Map';
@@ -23,7 +23,7 @@ const USA = () => {
     // }, []);
 
     return ( 
-        <Container centerContent marginTop="24px">
+        <Container centerContent maxW="container.lg" marginTop="24px">
             <SearchBar />
             <Map />
             <MapLegend />

@@ -4,15 +4,21 @@ import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import {
   Switch,
   Route,
-  NavLink
+  NavLink, 
+  useLocation
 } from "react-router-dom";
 
 import USA from "../Pages/USA";
 import States from "../Pages/States";
 import State from "../Pages/State";
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  let query = useQuery();
 
   return (
     <>
@@ -47,7 +53,7 @@ const Header = () => {
           <States />
         </Route>
         <Route path="/:state">
-          <State/>
+          <State state={query.get("state")}/>
         </Route>
       </Switch>
       </>
