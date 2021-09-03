@@ -23,7 +23,7 @@ const USA = () => {
     // }, []);
 
     return ( 
-        <Container centerContent maxW="container.lg" marginTop="24px">
+        <Container centerContent maxW="container.md" marginTop="24px">
             <SearchBar />
             <Map />
             <MapLegend />
