@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Text, Flex, Box, Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react';
+import { riskLevelCaseDensity } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 
 const State = ({ state }) => {
@@ -12,6 +13,7 @@ const State = ({ state }) => {
         .then(response => {
             let metrics = response.metrics;
             setData(metrics);
+            console.log(riskLevelCaseDensity(metrics.caseDensity))
         })
     }, []);
 
@@ -34,10 +36,24 @@ const State = ({ state }) => {
                     p={4}
                     flexDirection={['column', 'row', 'row', 'row']}
                 >
-                 
-                 <StatBox 
+                 <Box padding={2}>
+                    <Text fontWeight="bold">Daily new cases</Text>
+                    <Box d="flex">
+                        <Box 
+                            bg={`${riskLevelCaseDensity(data.caseDensity)}`}
+                            w={15}
+                            h={15}
+                            borderRadius={50}
+                            mt="15px"
+                            mr="5px"
+                        />
+                    <Text fontSize="3xl">{data.caseDensity}</Text>
+                    </Box>
+                </Box>
+                 {/* <StatBox 
                     statTitle="Daily new cases"
-                    statData={data.caseDensity} />
+                    statData={data.caseDensity}
+                    riskLevel={riskLevelCaseDensity} /> */}
                 <StatBox 
                     statTitle="Infection Rate"
                     statData={data.infectionRate } />
@@ -51,10 +67,20 @@ const State = ({ state }) => {
      );
 }
 
-const StatBox = ({ statTitle, statData }) => (
+const StatBox = ({ statTitle, statData, riskLevel }) => (
     <Box padding={2}>
         <Text fontWeight="bold">{statTitle}</Text>
+        <Box>
+            <Box 
+            // bg={`${riskLevel(statData)}`}
+            w={15}
+            h={15}
+            borderRadius={50}
+            
+            />
         <Text fontSize="3xl">{statData}</Text>
+
+        </Box>
     </Box>
 );
  
