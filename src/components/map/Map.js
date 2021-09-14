@@ -35,7 +35,7 @@ const Map = ({ category }) => {
                 }
             };
     return (
-        <Box marginTop="16">
+        <>
             <Heading as="h2" size="xl" textAlign="center" marginBottom="-35px">Risk Levels</Heading>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 {mapData === null ? null : (
@@ -64,7 +64,7 @@ const Map = ({ category }) => {
 
             </ComposableMap>
             <ReactTooltip>{tooltipContent}</ReactTooltip>
-        </Box>
+        </>
     )
 
 }

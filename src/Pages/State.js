@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Container, Text, Flex, Box, Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 
-
 const State = ({ state }) => {
     let { pathname } = useLocation();
     let [ data, setData ] = useState(null);
@@ -27,17 +26,22 @@ const State = ({ state }) => {
                 {pathname.replace('/', '')}
             </Text>
 
-            { data === null ? <p>loading</p> : 
+            { data === null ? 
+                <Skeleton height="50px" width="100%"/>
+                 : 
                 <Flex 
                     backgroundColor="white"
                     p={4}
+                    flexDirection={['column', 'row', 'row', 'row']}
                 >
-                 <Box>
-                    <Text>Daily new cases</Text>
-                    <Text fontSize="xl">
-                        {data.caseDensity}
-                    </Text>
-                 </Box>
+                 
+                 <StatBox 
+                    statTitle="Daily new cases"
+                    statData={data.caseDensity} />
+                <StatBox 
+                    statTitle="Infection Rate"
+                    statData={data.infectionRate } />
+
                 </Flex>
             }
 
@@ -46,5 +50,12 @@ const State = ({ state }) => {
 
      );
 }
+
+const StatBox = ({ statTitle, statData }) => (
+    <Box padding={2}>
+        <Text fontWeight="bold">{statTitle}</Text>
+        <Text fontSize="3xl">{statData}</Text>
+    </Box>
+);
  
 export default State;
