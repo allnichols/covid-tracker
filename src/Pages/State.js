@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Text, Flex, Box, Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react';
-import { riskLevelCaseDensity } from '../utils/riskLevel';
+import { Container, Text, Flex, Box, Skeleton } from '@chakra-ui/react';
+import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 
 const State = ({ state }) => {
@@ -13,7 +13,6 @@ const State = ({ state }) => {
         .then(response => {
             let metrics = response.metrics;
             setData(metrics);
-            console.log(riskLevelCaseDensity(metrics.caseDensity))
         })
     }, []);
 
@@ -36,52 +35,51 @@ const State = ({ state }) => {
                     p={4}
                     flexDirection={['column', 'row', 'row', 'row']}
                 >
-                 <Box padding={2}>
-                    <Text fontWeight="bold">Daily new cases</Text>
-                    <Box d="flex">
-                        <Box 
-                            bg={`${riskLevelCaseDensity(data.caseDensity)}`}
-                            w={15}
-                            h={15}
-                            borderRadius={50}
-                            mt="15px"
-                            mr="5px"
-                        />
-                    <Text fontSize="3xl">{data.caseDensity}</Text>
-                    </Box>
-                </Box>
-                 {/* <StatBox 
-                    statTitle="Daily new cases"
+                <StatBox 
+                    statTitle="Daily New Cases"
                     statData={data.caseDensity}
-                    riskLevel={riskLevelCaseDensity} /> */}
+                    riskLevel={riskLevelCaseDensity}
+                />
                 <StatBox 
                     statTitle="Infection Rate"
-                    statData={data.infectionRate } />
-
+                    statData={data.infectionRate}
+                    riskLevel={riskLevelInfectionRate}
+                />
+                <StatBox
+                    statTitle="Positive Test Rate"
+                    statData={data.testPositivityRatio}
+                    riskLevel={riskLevelPositiveRate}
+                 />
+                 <StatBox
+                    statTitle="% Vaccinated"
+                    statData={data.vaccinationsInitiatedRatio}
+                 />
                 </Flex>
             }
-
         </Container>
     </Box> 
 
      );
 }
 
-const StatBox = ({ statTitle, statData, riskLevel }) => (
+const StatBox = ({ statTitle, statData, riskLevel }) => {
+   let data = statTitle === 'Positive Test Rate' ? statData * 100 : statData;
+   return( 
     <Box padding={2}>
-        <Text fontWeight="bold">{statTitle}</Text>
-        <Box>
+        <Text fontWeight="bold" fontSize="1xl">{statTitle}</Text>
+        <Box d="flex" alignItems="center">
             <Box 
-            // bg={`${riskLevel(statData)}`}
-            w={15}
-            h={15}
-            borderRadius={50}
-            
+                bg={`${statTitle === '% Vaccinated' ? '' : riskLevel(statData)}`}
+                w="10px"
+                h="10px"
+                borderRadius={50}
+                // mt="15px"
+                mr="5px"
             />
-        <Text fontSize="3xl">{statData}</Text>
-
+        <Text fontSize="4xl">{data}</Text>
         </Box>
     </Box>
-);
+   )
+};
  
 export default State;

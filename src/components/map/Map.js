@@ -44,7 +44,7 @@ const Map = ({ category }) => {
                             return geographies.map((geo, i) => {
                                 let state = mapData.find( s => s.fips === geo.id);
                                 return (
-                                    <NavLink to={`${geo.properties.name}?state=${state ? state.state : 'none'}`}>
+                                    <NavLink key={geo.properties.name} to={`${geo.properties.name}?state=${state ? state.state : 'none'}`}>
                                         <Geography 
                                             key={geo.rsmKey}
                                             geography={geo}
