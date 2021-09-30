@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Text, Flex, Box, Skeleton } from '@chakra-ui/react';
+import { ChevronRightIcon } from '@chakra-ui/icons'
+import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
@@ -37,7 +39,7 @@ const State = ({ state }) => {
                     flexDirection='column'
                 >
                 <RiskLegend riskNumber={3}/>
-                <Box d="flex" flexDirection={['column', 'row', 'row', 'row']}>
+                <Box d="flex" flexDirection={['column', 'row', 'row', 'row']} mt="16px">
                     <StatBox 
                         statTitle="Daily New Cases"
                         statData={data.caseDensity}
@@ -67,23 +69,38 @@ const State = ({ state }) => {
 }
 
 const StatBox = ({ statTitle, statData, riskLevel }) => {
+    const slideChevron = {
+        hover: {
+            translateX: 5
+        }
+    }
    let data = statTitle === 'Positive Test Rate' || statTitle === '% Vaccinated' 
-            ? statData * 100 : statData;
+            ? (statData * 100).toFixed(2) : statData;
    return( 
-    <Box padding={2} ml={4}>
-        <Text fontWeight="bold" fontSize="1xl">{statTitle}</Text>
-        <Box d="flex" alignItems="center">
-            <Box 
-                bg={`${statTitle === '% Vaccinated' ? '' : riskLevel(statData)}`}
-                w="10px"
-                h="10px"
-                borderRadius={50}
-                // mt="15px"
-                mr="5px"
-            />
-        <Text fontSize="4xl">{data}</Text>
-        </Box>
+    <motion.div layout initial="initial" whileHover="hover">
+    <Box d="flex" flexDirection="column" alignContent="center" padding={2} mr={5} cursor="pointer">
+       
+            <Box d="flex" flexDirection="row" alignItems="center">
+                <Text fontSize="1xl" >
+                    {statTitle}         
+                </Text>
+                <motion.div variants={slideChevron} transition={{ duration: .3 }}>  
+                    <ChevronRightIcon />
+                </motion.div>
+            </Box>
+            <Box d="flex" alignItems="center" alignContent="center">
+                <Box 
+                    bg={`${statTitle === '% Vaccinated' ? '' : riskLevel(statData)}`}
+                    w="10px"
+                    h="10px"
+                    borderRadius={50}
+                    // mt="15px"
+                    mr="5px"
+                />
+            <Text fontSize="4xl">{data}</Text>
+            </Box>
     </Box>
+    </motion.div>
    )
 };
  
