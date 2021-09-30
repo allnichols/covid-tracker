@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text } from "@chakra-ui/react";
 
-
+// change this to map legend and put in legend folder
 const MapLegend = () => {
     return ( 
         <Box d="flex">

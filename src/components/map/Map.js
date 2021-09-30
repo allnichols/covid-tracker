@@ -11,7 +11,7 @@ const Map = ({ category }) => {
     const [tooltipContent, setTooltipContent] = useState("");
 
     useEffect(() => {
-         fetch(`https://api.covidactnow.org/v2/states.json?apiKey=${process.env.REACT_APP_API_ENDPOINT_KEY}`)
+         fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
          .then(response => response.json())
          .then(response => setMapData(response))
     }, []);
