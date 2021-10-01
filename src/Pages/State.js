@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Text, Flex, Box, Skeleton } from '@chakra-ui/react';
+import { Container, Text, Flex, Box, Skeleton, Progress } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
@@ -38,7 +38,13 @@ const State = ({ state }) => {
                     p={4}
                     flexDirection='column'
                 >
-                <RiskLegend riskNumber={3}/>
+                <Box d="flex" flexDirection='row' justifyContent="space-between">
+                    <RiskLegend riskNumber={3}/>
+                    <Box> 
+                        <Text>Vaccination Progress</Text>
+                        <Progress w="300px" h="20px" borderRadius="4px" value={data.vaccinationsCompletedRatio * 100} />
+                    </Box>
+                </Box>
                 <Box d="flex" flexDirection={['column', 'row', 'row', 'row']} mt="16px">
                     <StatBox 
                         statTitle="Daily New Cases"
@@ -75,7 +81,7 @@ const StatBox = ({ statTitle, statData, riskLevel }) => {
         }
     }
    let data = statTitle === 'Positive Test Rate' || statTitle === '% Vaccinated' 
-            ? (statData * 100).toFixed(2) : statData;
+            ? `${(statData * 100).toFixed(1)}%` : statData;
    return( 
     <motion.div layout initial="initial" whileHover="hover">
     <Box d="flex" flexDirection="column" alignContent="center" padding={2} mr={5} cursor="pointer">

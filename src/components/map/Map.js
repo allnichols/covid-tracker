@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { Heading, Box } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import ReactTooltip from "react-tooltip";
 import { NavLink } from "react-router-dom"; 
 

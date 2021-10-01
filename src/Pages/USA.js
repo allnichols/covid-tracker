@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Heading } from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 
 import SearchBar from '../components/search/SearchBar';
 import Map from '../components/map/Map';
