@@ -9,7 +9,7 @@ import RiskLegend from '../components/legend/RiskLegend';
 const State = ({ state }) => {
     let { pathname } = useLocation();
     let [ data, setData ] = useState(null);
-
+    // add check for state or county level
     useEffect(() => {
         fetch(`https://api.covidactnow.org/v2/state/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then(response => response.json())

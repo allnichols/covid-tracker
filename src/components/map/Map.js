@@ -5,6 +5,9 @@ import ReactTooltip from "react-tooltip";
 import { NavLink } from "react-router-dom"; 
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
+const statesApi = `https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
+const countiesApi = `https://api.covidactnow.org/v2/counties.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
 
 const Map = ({ category }) => {
     const [mapData, setMapData] = useState([]);

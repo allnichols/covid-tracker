@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 
 import USA from "../Pages/USA";
-import States from "../Pages/States";
 import State from "../Pages/State";
 
 function useQuery() {
@@ -31,12 +30,12 @@ const Header = () => {
         <Box>
           <Heading size="md">Covid-19 Tracker</Heading>
         </Box>
+        {/* Add Box here for search bar when on home page scrolled down.
+            also for the search bar to start on state page
+        */}
         <Flex as="nav" justify="space-between" alignItems="center">
           <Box mr="16px">
             <NavLink to="/">USA</NavLink>
-          </Box>
-          <Box mr="16px">
-            <NavLink to="/states">States</NavLink>
           </Box>
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
@@ -48,9 +47,6 @@ const Header = () => {
       <Switch>
         <Route exact path="/">
           <USA />
-        </Route>
-        <Route exact path="/states">
-          <States />
         </Route>
         <Route path="/:state">
           <State state={query.get("state")}/>
