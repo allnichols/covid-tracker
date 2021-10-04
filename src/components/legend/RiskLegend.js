@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Text } from '@chakra-ui/react';
-import { overallRiskLevelStateLevel, riskLevelCaseDensity } from '../../utils/riskLevel';
+import { overallRiskLevelStateLevel } from '../../utils/riskLevel';
 
 const RiskLegend = ({ riskNumber }) => {
   let riskLevel = overallRiskLevelStateLevel(riskNumber);
   return(  
-    <Box d="flex">
+    <Box d="flex" mb={[15, 0, 0, 0 ]} mr={[0, 0, 0, 35]}>
         <Box d="flex" flexDirection="column" mr="16px">
             <Box bg="#790019" w="15px" h="15px" borderRadius="99px 99px 0px 0px"></Box>
 
@@ -33,9 +33,5 @@ const RiskLegend = ({ riskNumber }) => {
     </Box>
   );
 }
-
-// const riskLevel = (number) => {
-    
-// }
 
 export default RiskLegend

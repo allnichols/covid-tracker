@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Text, Flex, Box, Skeleton, Progress } from '@chakra-ui/react';
+import { Container, Text, Grid, GridItem, Flex, Box, Skeleton, Progress } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
@@ -33,40 +33,51 @@ const State = ({ state }) => {
             { data === null ? 
                 <Skeleton height="50px" width="100%"/>
                  : 
-                <Flex 
-                    backgroundColor="white"
-                    p={4}
-                    flexDirection='column'
-                >
-                <Box d="flex" flexDirection='row' justifyContent="space-between">
-                    <RiskLegend riskNumber={3}/>
-                    <Box> 
+                 <Grid 
+                    templateRows={{base:"1fr 1fr", lg: "1fr"}}
+                    templateColumns={{base: "1fr", lg:"repeat(6, 1fr)"}}
+                    gap={2}
+                    backgroundColor="white" 
+                    p="16px"
+                 >
+                <GridItem colSpan={2} rowEnd={1}>
+                    <Flex flexDirection={['column', 'row', 'row', 'row']}>
+                    <RiskLegend riskNumber={3} />
+                    <Box d="grid">
                         <Text>Vaccination Progress</Text>
                         <Progress w="300px" h="20px" borderRadius="4px" value={data.vaccinationsCompletedRatio * 100} />
                     </Box>
-                </Box>
-                <Box d="flex" flexDirection={['column', 'row', 'row', 'row']} mt="16px">
-                    <StatBox 
-                        statTitle="Daily New Cases"
-                        statData={data.caseDensity}
-                        riskLevel={riskLevelCaseDensity}
-                    />
-                    <StatBox 
-                        statTitle="Infection Rate"
-                        statData={data.infectionRate}
-                        riskLevel={riskLevelInfectionRate}
-                    />
-                    <StatBox
-                        statTitle="Positive Test Rate"
-                        statData={data.testPositivityRatio}
-                        riskLevel={riskLevelPositiveRate}
-                    />
-                    <StatBox
-                        statTitle="% Vaccinated"
-                        statData={data.vaccinationsInitiatedRatio}
-                    />
-                 </Box>
-                </Flex>
+                    </Flex>
+                </GridItem>
+                <GridItem colSpan={4} rowEnd={2}>
+                    <Box d="flex" flexDirection={['column', 'row', 'row', 'row']} mt="16px">
+                        <StatBox 
+                            statTitle="Daily New Cases"
+                            statData={data.caseDensity}
+                            riskLevel={riskLevelCaseDensity}
+                        />
+                        <StatBox 
+                            statTitle="Infection Rate"
+                            statData={data.infectionRate}
+                            riskLevel={riskLevelInfectionRate}
+                        />
+                        <StatBox
+                            statTitle="Positive Test Rate"
+                            statData={data.testPositivityRatio}
+                            riskLevel={riskLevelPositiveRate}
+                        />
+                        <StatBox
+                            statTitle="% Vaccinated"
+                            statData={data.vaccinationsInitiatedRatio}
+                        />
+                    </Box>
+                </GridItem>
+                <GridItem rowSpan={2} colSpan={{lg: 2}} alignSelf="stretch">
+                    <Box h="100%" bg="lightgrey">
+                        <Text>Map Box</Text>
+                    </Box>
+                </GridItem>
+            </Grid>
             }
         </Container>
     </Box> 
