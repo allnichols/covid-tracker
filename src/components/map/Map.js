@@ -56,6 +56,11 @@ const Map = ({ category }) => {
                                             fillOpacity={'1px'}
                                             stroke={"white"}
                                             onMouseEnter={() => setTooltipContent(geo.properties.name)}
+                                            style={{
+                                              default: { outline: "none" },
+                                              hover: { outline: "none" },
+                                              pressed: { outline: "none" },
+                                            }}
                                         />
                                     </NavLink>
                                 )
