@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
+import StateMap from  '../components/map/StateMap';
 
 const State = ({ state }) => {
     let { pathname } = useLocation();
@@ -73,8 +74,8 @@ const State = ({ state }) => {
                     </Box>
                 </GridItem>
                 <GridItem rowSpan={2} colSpan={{lg: 2}} alignSelf="stretch">
-                    <Box h="100%" bg="lightgrey">
-                        <Text>Map Box</Text>
+                    <Box h="100%" overflow="hidden" borderRadius="10px" border="1px solid grey">
+                        <StateMap />
                     </Box>
                 </GridItem>
             </Grid>
