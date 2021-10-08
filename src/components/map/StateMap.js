@@ -33,7 +33,6 @@ const riskLevelCheck = (num) => {
 const StateMap = () => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
-    const [position, setPosition] = useState({ coordinates: [50, 50], zoom: 5})
     const [center, setCenter] = useState([-90, 30])
     const [zoom, setZoom] = useState(1);
     const { search } = useLocation();
@@ -57,6 +56,7 @@ const StateMap = () => {
     }
 
     const handleGeographyClick = (geography, event) => {
+      console.log(geography.geometry.coordinates)
       event.persist();
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
@@ -75,7 +75,7 @@ const StateMap = () => {
 
             
                   <Geographies geography={geoUrlCounties}>
-                    {({ geographies, projection }) => 
+                    {({ geographies }) => 
                        geographies.map( (geo, i) => {
                         let county = mapData.find( county => county.fips === geo.id);
                       

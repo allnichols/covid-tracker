@@ -1,1 +1,1 @@
-Notice: The COVID Tracking Project is ending all data collection on March 7, 2021. The existing API will continue to work until May 2021, but will only include data up to March 7, 2021.
+lat long for states: https://www.latlong.net/category/states-236-14.html
