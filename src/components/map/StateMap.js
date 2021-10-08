@@ -10,6 +10,8 @@ import { geoPath } from 'd3-geo';
 import { geoTimes } from 'd3-geo-projection';
 
 const geoUrlCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
+const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
+
 
 const riskLevelCheck = (num) => {
     switch (num) {
@@ -35,19 +37,22 @@ const StateMap = () => {
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
     const [zoom, setZoom] = useState(1);
-    const { search } = useLocation();
-    let state = search.slice(-2);
-
-
-  
-
+    const { search, pathname } = useLocation();
+    
     useEffect(() => {
+        let state = search.substring(7,9)
+        console.log(state)
         fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then(response => response.json())
         .then(response => {
             setMapData(response);
-        })
-    }, [state])
+        });
+
+        console.log(search, pathname)
+        
+        handleGeographyClick()
+
+    }, [search])
 
     const projection = () => {
       return geoTimes()
@@ -55,9 +60,7 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography, event) => {
-      console.log(geography.geometry.coordinates)
-      event.persist();
+    const handleGeographyClick = (geography) => {
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
       setCenter(centroid);
@@ -69,30 +72,8 @@ const StateMap = () => {
     };
     return ( 
         <>
-            <ComposableMap data-tip="" projection="geoAlbersUsa" 
-            projectionConfig={{ scale: 2000,  center: center }}  preserveAspectRatio="none">
-            <ZoomableGroup filterZoomEvent={handleFilter} center={center}>
-
-            
-                  <Geographies geography={geoUrlCounties}>
-                    {({ geographies }) => 
-                       geographies.map( (geo, i) => {
-                        let county = mapData.find( county => county.fips === geo.id);
-                      
-                            return (
-                                <Geography 
-                                    key={geo.rsmKey}
-                                    geography={geo}
-                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
-                                    strokeWidth={ !county ? 0 : 2}
-                                    fillOpacity={'1px'}
-                                    onClick={(e) => handleGeographyClick(geo,e)}
-                                />
-                            )
-                        })
-                    }
-                  </Geographies>  
-                  </ZoomableGroup>
+            <ComposableMap data-tip="" projection="geoAlbersUsa" >
+           
             </ComposableMap>
         </>
      );

@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 const MotionItem = motion(Flex);
 
 
-const SearchItem = ({name, riskLevel, population}) => {
+const SearchItem = ({name, riskLevel, population, stateAbbreviation}) => {
 
     const riskLevelCheck = (num) => {
         switch (num) {
@@ -33,7 +33,7 @@ const SearchItem = ({name, riskLevel, population}) => {
       }
 
     return ( 
-        <Link as={ReactRouter} width="95%" to={name.substr(0, name.length - 3).replaceAll('_', ' ')} key={name}>
+        <Link as={ReactRouter} width="95%" to={`${name.substr(0, name.length - 3).replaceAll('_', ' ')}?state=${stateAbbreviation}`} key={stateAbbreviation}>
               <MotionItem 
                 alignItems="center"
                 marginTop="16px"

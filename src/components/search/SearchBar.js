@@ -18,7 +18,6 @@ const SearchBar = () => {
       .then( function(response){
         return response.json()
       }).then(function (data){
-        console.log(data);
           setOptions(data)
       }).catch(function (error){
           console.log(error);
@@ -31,10 +30,10 @@ const SearchBar = () => {
        setFiltered(
          options.filter( (item, i) => {
            let state = item.url.replaceAll('https://covidactnow.org/us/', '');
-           
            if(search.length >= 1 && state.toLowerCase().includes( search.toLowerCase() )){
               return item;
            }
+           return false;
          })
        )
      }
@@ -55,19 +54,21 @@ const SearchBar = () => {
     <Box 
       w="100%"
       overflowY="scroll"
+      maxHeight="400px"
       display="flex"
       flexDirection="column">
       {filtered.map( item => {
-
-        let stateName = item.url.replaceAll('https://covidactnow.org/us/', '')
+        let stateName = item.url.replaceAll('https://covidactnow.org/us/', '');
+        let stateAbbreviation = item.state;
         let riskLevelNum = item.riskLevels.overall;
         let population = item.population;
-
+        
         return (
           <SearchItem 
            name={stateName} 
            riskLevel={riskLevelNum} 
-           population={population} />
+           population={population}
+           stateAbbreviation={stateAbbreviation} />
            
           )
       })}

@@ -9,6 +9,8 @@ const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
 const statesApi = `https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
 const countiesApi = `https://api.covidactnow.org/v2/counties.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
 
+// Make this map to be used throughout the app.
+// after click go to page then zoom in on state
 const Map = ({ category }) => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
@@ -39,13 +41,15 @@ const Map = ({ category }) => {
             };
     return (
         <>
-            <Heading as="h2" size="xl" textAlign="center" marginBottom="-35px">Risk Levels</Heading>
+            
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 {mapData === null ? null : (
                     <Geographies geography={geoUrl}>
                         {({geographies}) => {
                             return geographies.map((geo, i) => {
                                 let state = mapData.find( s => s.fips === geo.id);
+                                let coordinates = geo;
+                                
                                 return (
                                     <NavLink key={geo.properties.name} to={`${geo.properties.name}?state=${state ? state.state : 'none'}`}>
                                         <Geography 

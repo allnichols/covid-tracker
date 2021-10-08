@@ -5,14 +5,16 @@ import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
-import StateMap from  '../components/map/StateMap';
+import Map from '../components/map/Map';
+import StateMap from '../components/map/StateMap';
 
 const State = ({ state }) => {
     let { pathname } = useLocation();
     let [ data, setData ] = useState(null);
-    // add check for state or county level
+    
     useEffect(() => {
-        fetch(`https://api.covidactnow.org/v2/state/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
+        let stateAbbreviation = state.substring(0,2);
+        fetch(`https://api.covidactnow.org/v2/state/${stateAbbreviation}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then(response => response.json())
         .then(response => {
             let metrics = response.metrics;
