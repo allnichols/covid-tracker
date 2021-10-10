@@ -10,8 +10,6 @@ import { geoPath } from 'd3-geo';
 import { geoTimes } from 'd3-geo-projection';
 
 const geoUrlCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
-const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
-
 
 const riskLevelCheck = (num) => {
     switch (num) {
@@ -31,28 +29,21 @@ const riskLevelCheck = (num) => {
     }
 };
 
-
 const StateMap = () => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
-    const [zoom, setZoom] = useState(1);
-    const { search, pathname } = useLocation();
-    
+    const [zoom, setZoom] = useState(3);
+    const { search } = useLocation();
+    let state = search.slice(-2);
+
     useEffect(() => {
-        let state = search.substring(7,9)
-        console.log(state)
-        fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
-        .then(response => response.json())
-        .then(response => {
-            setMapData(response);
-        });
-
-        console.log(search, pathname)
-        
-        handleGeographyClick()
-
-    }, [search])
+      Promise.all([
+        fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`).then(resp => resp.json()),
+        fetch(geoUrlCounties).then(resp => resp.json())
+      ])
+      .then( response => console.log(response))
+    }, [state])
 
     const projection = () => {
       return geoTimes()
@@ -60,20 +51,40 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography) => {
+    const handleGeographyClick = (geography, event) => {
+      event.persist();
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
       setCenter(centroid);
-      setZoom(4);
+      setZoom(3);
     };
 
     const handleFilter = ({ constructor: { name } }) => {
       return name !== "MouseEvent";
     };
+
     return ( 
         <>
-            <ComposableMap data-tip="" projection="geoAlbersUsa" >
-           
+            <ComposableMap data-tip="" projection="geoAlbersUsa" preserveAspectRatio="none">
+              <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
+                  <Geographies geography={geoUrlCounties}>
+                    {({ geographies }) => 
+                       geographies.map( (geo, i) => {
+                        let county = mapData.find( county => county.fips === geo.id);
+                            return (
+                                <Geography 
+                                    key={geo.rsmKey}
+                                    geography={geo}
+                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
+                                    strokeWidth={ !county ? 0 : 2}
+                                    fillOpacity={'1px'}
+                                    onClick={(e) => handleGeographyClick(geo,e)}
+                                />
+                            )
+                        })
+                    }
+                  </Geographies>  
+              </ZoomableGroup>
             </ComposableMap>
         </>
      );
