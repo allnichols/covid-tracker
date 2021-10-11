@@ -6,7 +6,7 @@ import {
     ZoomableGroup
   } from "react-simple-maps";
 import { useLocation } from 'react-router';
-import { geoPath, geoMercator } from 'd3-geo';
+import { geoPath } from 'd3-geo';
 import { geoTimes } from 'd3-geo-projection';
 import geoJson from '../../geojson/states.json';
 

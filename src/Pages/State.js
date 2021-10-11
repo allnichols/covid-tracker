@@ -5,7 +5,6 @@ import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useLocation } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
-import Map from '../components/map/Map';
 import StateMap from '../components/map/StateMap';
 
 const State = ({ state }) => {
