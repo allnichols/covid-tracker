@@ -6,8 +6,9 @@ import {
     ZoomableGroup
   } from "react-simple-maps";
 import { useLocation } from 'react-router';
-import { geoPath } from 'd3-geo';
+import { geoPath, geoMercator } from 'd3-geo';
 import { geoTimes } from 'd3-geo-projection';
+import geoJson from '../../geojson/states.json';
 
 const geoUrlCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
 
@@ -34,7 +35,7 @@ const StateMap = () => {
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
     const [zoom, setZoom] = useState(3);
-    const { search } = useLocation();
+    const { pathname, search } = useLocation();
     let state = search.slice(-2);
 
     useEffect(() => {
@@ -42,7 +43,23 @@ const StateMap = () => {
         fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`).then(resp => resp.json()),
         fetch(geoUrlCounties).then(resp => resp.json())
       ])
-      .then( response => console.log(response))
+      .then( response => {
+        let data = response[0];
+        let states = response[1].objects.states.geometries;
+        let selectedState = pathname.replace('/', '');
+        
+       let foundState = states.filter( state => {
+          if(state.properties.name === selectedState){
+            console.log(state)
+            return state;
+          } else {
+            return false;
+          }
+        });
+
+        // handleGeographyClick(foundState[0])
+
+      })
     }, [state])
 
     const projection = () => {
@@ -52,9 +69,11 @@ const StateMap = () => {
     }
 
     const handleGeographyClick = (geography, event) => {
-      event.persist();
+      // event.persist();
+      console.log(geography)
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
+      
       setCenter(centroid);
       setZoom(3);
     };
@@ -65,12 +84,13 @@ const StateMap = () => {
 
     return ( 
         <>
-            <ComposableMap data-tip="" projection="geoAlbersUsa" preserveAspectRatio="none">
+            <ComposableMap data-tip="" preserveAspectRatio="none">
               <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
-                  <Geographies geography={geoUrlCounties}>
+                  <Geographies geography={geoJson}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
                         let county = mapData.find( county => county.fips === geo.id);
+                        
                             return (
                                 <Geography 
                                     key={geo.rsmKey}

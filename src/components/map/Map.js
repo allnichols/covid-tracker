@@ -3,6 +3,7 @@ import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { Heading } from "@chakra-ui/react";
 import ReactTooltip from "react-tooltip";
 import { NavLink } from "react-router-dom"; 
+import geoJson from '../../geojson/states.json';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
@@ -44,22 +45,25 @@ const Map = ({ category }) => {
             
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 {mapData === null ? null : (
-                    <Geographies geography={geoUrl}>
+                    <Geographies geography={geoJson}>
                         {({geographies}) => {
                             return geographies.map((geo, i) => {
-                                let state = mapData.find( s => s.fips === geo.id);
-                                let coordinates = geo;
+                                let state = mapData.find( s => {
+                                  // s.fips === geo.id
+                                  return geo.properties.STATE === s.fips;
+                                });
+                               
                                 
                                 return (
-                                    <NavLink key={geo.properties.name} to={`${geo.properties.name}?state=${state ? state.state : 'none'}`}>
+                                    <NavLink key={geo.properties.NAME} to={`${geo.properties.NAME}?state=${state ? state.state : 'none'}`}>
                                         <Geography 
                                             key={geo.rsmKey}
                                             geography={geo}
                                             fill={ state ? riskLevelCheck(state.riskLevels.overall) : '#eee' }
-                                            strokeWidth={'2px'}
+                                            strokeWidth={'1px'}
                                             fillOpacity={'1px'}
                                             stroke={"white"}
-                                            onMouseEnter={() => setTooltipContent(geo.properties.name)}
+                                            onMouseEnter={() => setTooltipContent(geo.properties.NAME)}
                                             style={{
                                               default: { outline: "none" },
                                               hover: { outline: "none" },
