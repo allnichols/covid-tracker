@@ -38,8 +38,7 @@ const StateMap = () => {
     const { pathname, search } = useLocation();
     let state = search.slice(-2);
 
-    useEffect(() => {
-      
+    useEffect(() => {  
         fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then( response => response.json())
         .then( response => {
@@ -47,10 +46,12 @@ const StateMap = () => {
           let selectedState = pathname.replace('/', '');
           // http://bl.ocks.org/ElefHead/ebff082d41ef8b9658059c408096f782
           // https://gist.github.com/ElefHead/ebff082d41ef8b9658059c408096f782
-          // when user comes to page it will only show that states counties/parishes.
-          setMapData(data)
+          setMapData(data);
+          let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
+          console.log(zoomState)
+          
       })
-    }, [state])
+    }, [state, pathname])
 
     const projection = () => {
       return geoTimes()
@@ -79,10 +80,7 @@ const StateMap = () => {
                   <Geographies geography={geoJsonStates}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
-                        let county = mapData.find( county => {
-                          
-                          return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
-                        });
+                        let county = mapData.find( county => county);
                           
                             return (
                                 <Geography 
@@ -91,7 +89,7 @@ const StateMap = () => {
                                     // fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'1px'}
-                                    onClick={(e) => handleGeographyClick(geo,e, county)}
+                                    onClick={(e) => handleGeographyClick(geo, e, county)}
                                     // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
 
                                 />
