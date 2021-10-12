@@ -8,9 +8,9 @@ import {
 import { useLocation } from 'react-router';
 import { geoPath } from 'd3-geo';
 import { geoTimes } from 'd3-geo-projection';
-import geoJson from '../../geojson/states.json';
-
-const geoUrlCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
+import geoJsonCounties from '../../geojson/counties.json';
+import geoJsonStates from '../../geojson/states.json';
+import ReactTooltip from 'react-tooltip';
 
 const riskLevelCheck = (num) => {
     switch (num) {
@@ -34,31 +34,21 @@ const StateMap = () => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
-    const [zoom, setZoom] = useState(3);
+    const [zoom, setZoom] = useState(1);
     const { pathname, search } = useLocation();
     let state = search.slice(-2);
 
     useEffect(() => {
-      Promise.all([
-        fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`).then(resp => resp.json()),
-        fetch(geoUrlCounties).then(resp => resp.json())
-      ])
-      .then( response => {
-        let data = response[0];
-        let states = response[1].objects.states.geometries;
-        let selectedState = pathname.replace('/', '');
-        
-       let foundState = states.filter( state => {
-          if(state.properties.name === selectedState){
-            console.log(state)
-            return state;
-          } else {
-            return false;
-          }
-        });
-
-        // handleGeographyClick(foundState[0])
-
+      
+        fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
+        .then( response => response.json())
+        .then( response => {
+          let data = response;
+          let selectedState = pathname.replace('/', '');
+          // http://bl.ocks.org/ElefHead/ebff082d41ef8b9658059c408096f782
+          // https://gist.github.com/ElefHead/ebff082d41ef8b9658059c408096f782
+          // when user comes to page it will only show that states counties/parishes.
+          setMapData(data)
       })
     }, [state])
 
@@ -68,9 +58,9 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography, event) => {
+    const handleGeographyClick = (geography, event, county) => {
       // event.persist();
-      console.log(geography)
+      console.log(geography, county)
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
       
@@ -84,21 +74,26 @@ const StateMap = () => {
 
     return ( 
         <>
-            <ComposableMap data-tip="" preserveAspectRatio="none">
+            <ComposableMap data-tip="" projection="geoAlbersUsa">
               <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
-                  <Geographies geography={geoJson}>
+                  <Geographies geography={geoJsonStates}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
-                        let county = mapData.find( county => county.fips === geo.id);
-                        
+                        let county = mapData.find( county => {
+                          
+                          return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
+                        });
+                          
                             return (
                                 <Geography 
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
+                                    // fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'1px'}
-                                    onClick={(e) => handleGeographyClick(geo,e)}
+                                    onClick={(e) => handleGeographyClick(geo,e, county)}
+                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
+
                                 />
                             )
                         })
@@ -106,6 +101,7 @@ const StateMap = () => {
                   </Geographies>  
               </ZoomableGroup>
             </ComposableMap>
+            <ReactTooltip>{tooltipContent}</ReactTooltip>
         </>
      );
 }

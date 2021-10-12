@@ -48,10 +48,7 @@ const Map = ({ category }) => {
                     <Geographies geography={geoJson}>
                         {({geographies}) => {
                             return geographies.map((geo, i) => {
-                                let state = mapData.find( s => {
-                                  // s.fips === geo.id
-                                  return geo.properties.STATE === s.fips;
-                                });
+                                let state = mapData.find( s => geo.properties.STATE === s.fips );
                                
                                 
                                 return (
