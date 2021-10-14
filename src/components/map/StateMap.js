@@ -39,19 +39,20 @@ const StateMap = () => {
     const { pathname, search } = useLocation();
     let state = search.slice(-2);
 
-    useEffect(() => {  
+    useEffect(() => {
+      
         fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then( response => response.json())
         .then( response => {
           let data = response;
           let selectedState = pathname.replace('/', '');
-
           setMapData(data);
           let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
           handleGeographyClick(zoomState);
           setCurrentState(selectedState);          
+
       })
-    }, [state, pathname])
+    }, [state])
 
     const projection = () => {
       return geoTimes()
@@ -79,7 +80,14 @@ const StateMap = () => {
                   <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
+<<<<<<< HEAD
                         let county = mapData.find( county => county.county.includes(geo.properties.NAME));
+=======
+                        let county = mapData.find( county => {
+                          
+                          return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
+                        });
+>>>>>>> parent of e6b3538... used find to get intial state to zoom to
                           
                             return (
                                 <Geography 
@@ -89,6 +97,7 @@ const StateMap = () => {
                                     projection={`${projection}`}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'1px'}
+<<<<<<< HEAD
                                     onClick={() => handleGeographyClick(geo, county)}
                                     onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
                                     style={{
@@ -96,6 +105,11 @@ const StateMap = () => {
                                       hover: { outline: "none" },
                                       pressed: { outline: "none" },
                                     }}
+=======
+                                    onClick={(e) => handleGeographyClick(geo,e, county)}
+                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
+
+>>>>>>> parent of e6b3538... used find to get intial state to zoom to
                                 />
                             )
                         })
