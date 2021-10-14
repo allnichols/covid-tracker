@@ -34,7 +34,8 @@ const StateMap = () => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState(3);
+    const [currentState, setCurrentState] = useState(null);
     const { pathname, search } = useLocation();
     let state = search.slice(-2);
 
@@ -44,12 +45,11 @@ const StateMap = () => {
         .then( response => {
           let data = response;
           let selectedState = pathname.replace('/', '');
-          // http://bl.ocks.org/ElefHead/ebff082d41ef8b9658059c408096f782
-          // https://gist.github.com/ElefHead/ebff082d41ef8b9658059c408096f782
+
           setMapData(data);
           let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
-          console.log(zoomState)
-          
+          handleGeographyClick(zoomState);
+          setCurrentState(selectedState);          
       })
     }, [state, pathname])
 
@@ -59,12 +59,11 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography, event, county) => {
-      // event.persist();
+    const handleGeographyClick = (geography, county) => {
       console.log(geography, county)
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
-      
+
       setCenter(centroid);
       setZoom(3);
     };
@@ -77,20 +76,21 @@ const StateMap = () => {
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
               <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
-                  <Geographies geography={geoJsonStates}>
+                  <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
-                        let county = mapData.find( county => county);
+                        let county = mapData.find( county => county.county.includes(geo.properties.NAME));
                           
                             return (
                                 <Geography 
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    // fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
+                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
+                                    projection={`${projection}`}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'1px'}
-                                    onClick={(e) => handleGeographyClick(geo, e, county)}
-                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
+                                    onClick={() => handleGeographyClick(geo, county)}
+                                    onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
 
                                 />
                             )
