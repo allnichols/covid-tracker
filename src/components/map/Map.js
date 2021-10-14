@@ -4,18 +4,21 @@ import { Heading } from "@chakra-ui/react";
 import ReactTooltip from "react-tooltip";
 import { NavLink } from "react-router-dom"; 
 import geoJson from '../../geojson/states.json';
+import { useData } from './useData';
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json";
 const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
 const statesApi = `https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
 const countiesApi = `https://api.covidactnow.org/v2/counties.json?apiKey=db851a7fa0434131ad626738b50e2c0a`;
+const usa = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-albers-10m.json';
+
 
 // Make this map to be used throughout the app.
 // after click go to page then zoom in on state
 const Map = ({ category }) => {
     const [mapData, setMapData] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
-
+  
     useEffect(() => {
          fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
          .then(response => response.json())
@@ -44,37 +47,22 @@ const Map = ({ category }) => {
         <>
             
             <ComposableMap data-tip="" projection="geoAlbersUsa">
-                {mapData === null ? null : (
-                    <Geographies geography={geoJson}>
-                        {({geographies}) => {
-                            return geographies.map((geo, i) => {
-                                let state = mapData.find( s => geo.properties.STATE === s.fips );
-                               
-                                
-                                return (
-                                    <NavLink key={geo.properties.NAME} to={`${geo.properties.NAME}?state=${state ? state.state : 'none'}`}>
-                                        <Geography 
-                                            key={geo.rsmKey}
-                                            geography={geo}
-                                            fill={ state ? riskLevelCheck(state.riskLevels.overall) : '#eee' }
-                                            strokeWidth={'1px'}
-                                            fillOpacity={'1px'}
-                                            stroke={"white"}
-                                            onMouseEnter={() => setTooltipContent(geo.properties.NAME)}
-                                            style={{
-                                              default: { outline: "none" },
-                                              hover: { outline: "none" },
-                                              pressed: { outline: "none" },
-                                            }}
-                                        />
-                                    </NavLink>
-                                )
+                { mapData !== null ?
+                  <Geographies geography={usa}>
+                      {({geographies}) => 
+                        geographies.map((geo, i) => {
+                          if(i === 0) console.log(geo)
+                          return (
+                            <Geography
+                              key={geo.rsmKey}
+                              geography={geo}
+                            />
+                          )
 
-                            })  
-                        }}
-                    </Geographies>
-                )}
-
+                        })
+                      }
+                  </Geographies>
+                : null }
             </ComposableMap>
             <ReactTooltip>{tooltipContent}</ReactTooltip>
         </>

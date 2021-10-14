@@ -91,7 +91,11 @@ const StateMap = () => {
                                     fillOpacity={'1px'}
                                     onClick={() => handleGeographyClick(geo, county)}
                                     onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
-
+                                    style={{
+                                      default: { outline: "none" },
+                                      hover: { outline: "none" },
+                                      pressed: { outline: "none" },
+                                    }}
                                 />
                             )
                         })
