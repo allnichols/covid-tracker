@@ -80,14 +80,11 @@ const StateMap = () => {
                   <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
-<<<<<<< HEAD
-                        let county = mapData.find( county => county.county.includes(geo.properties.NAME));
-=======
+
                         let county = mapData.find( county => {
                           
                           return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
                         });
->>>>>>> parent of e6b3538... used find to get intial state to zoom to
                           
                             return (
                                 <Geography 
@@ -97,7 +94,6 @@ const StateMap = () => {
                                     projection={`${projection}`}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'1px'}
-<<<<<<< HEAD
                                     onClick={() => handleGeographyClick(geo, county)}
                                     onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
                                     style={{
@@ -105,11 +101,6 @@ const StateMap = () => {
                                       hover: { outline: "none" },
                                       pressed: { outline: "none" },
                                     }}
-=======
-                                    onClick={(e) => handleGeographyClick(geo,e, county)}
-                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
-
->>>>>>> parent of e6b3538... used find to get intial state to zoom to
                                 />
                             )
                         })
