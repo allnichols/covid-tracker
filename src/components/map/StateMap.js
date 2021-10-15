@@ -12,6 +12,8 @@ import geoJsonCounties from '../../geojson/counties.json';
 import geoJsonStates from '../../geojson/states.json';
 import ReactTooltip from 'react-tooltip';
 
+const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
+
 const riskLevelCheck = (num) => {
     switch (num) {
       case 0:
@@ -47,12 +49,17 @@ const StateMap = () => {
           let data = response;
           let selectedState = pathname.replace('/', '');
           setMapData(data);
-          let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
-          handleGeographyClick(zoomState);
           setCurrentState(selectedState);          
 
+            console.log('counties json', geoJsonCounties.features)
+            //  state = 01 (from geoJsonCounties)
+            //  state = STATE (from geoJsonStates)
+            //  find the stated id 
+          // let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
+          // handleGeographyClick(zoomState);
+
       })
-    }, [state])
+    }, [state, pathname])
 
     const projection = () => {
       return geoTimes()
@@ -72,7 +79,7 @@ const StateMap = () => {
     const handleFilter = ({ constructor: { name } }) => {
       return name !== "MouseEvent";
     };
-
+    console.log(currentState);
     return ( 
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
@@ -80,7 +87,7 @@ const StateMap = () => {
                   <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
                        geographies.map( (geo, i) => {
-
+                        
                         let county = mapData.find( county => {
                           
                           return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
@@ -90,12 +97,12 @@ const StateMap = () => {
                                 <Geography 
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
-                                    projection={`${projection}`}
-                                    strokeWidth={ !county ? 0 : 2}
-                                    fillOpacity={'1px'}
-                                    onClick={() => handleGeographyClick(geo, county)}
-                                    onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
+                                    // fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
+                                    // projection={`${projection}`}
+                                    // strokeWidth={ !county ? 0 : 2}
+                                    // fillOpacity={'1px'}
+                                    // onClick={() => handleGeographyClick(geo, county)}
+                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
                                     style={{
                                       default: { outline: "none" },
                                       hover: { outline: "none" },
