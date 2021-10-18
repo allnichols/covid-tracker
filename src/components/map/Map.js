@@ -45,21 +45,20 @@ const Map = ({ category }) => {
             };
     return (
         <>
-            
             <ComposableMap data-tip="" projection="geoAlbersUsa">
                 { mapData !== null ?
                   <Geographies geography={geoUrl}>
                       {({geographies}) => 
                         geographies.map((geo, i) => {
-                          if(i === 0) console.log(geo, mapData[0]);
                           let state = mapData.find(datum => {
                               if(datum.fips === geo.id){
                                 return datum
                               }
+                              return false;
                           });
                           return (
                                   
-                            <NavLink key={geo.rsmKey} to={`${geo.properties.name}?state=${state ? state.state : 'none'}-${geo.id}`}>
+                            <NavLink key={geo.rsmKey} to={`${geo.properties.name}?state=${state ? state.state : 'none'}?id=${geo.id}`}>
                                 <Geography
                                   key={geo.rsmKey}
                                   geography={geo}

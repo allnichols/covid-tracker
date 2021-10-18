@@ -14,52 +14,30 @@ import ReactTooltip from 'react-tooltip';
 
 const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
 
-const riskLevelCheck = (num) => {
-    switch (num) {
-      case 0:
-        return "#00d474";
-      case 1:
-        return "#ffc900";
-      case 2:
-        return "#ff9600";
-      case 3:
-        return "#d9002c";
-      case 4:
-        return "#790019";
-      case 5: 
-        return "#790019";
-      default:  
-    }
-};
-
 const StateMap = () => {
     const [mapData, setMapData] = useState([]);
+    const [counties, setCounties] = useState([]);
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
     const [zoom, setZoom] = useState(3);
-    const [currentState, setCurrentState] = useState(null);
+    const [currentStateAbbreviation, setCurrentStateAbbreviation] = useState(null);
     const { pathname, search } = useLocation();
-    let state = search.slice(-2);
 
     useEffect(() => {
-      
-        fetch(`https://api.covidactnow.org/v2/county/${state}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
+       let stateAbbreviation = search.substring(7,9);
+       let stateId = search.slice(-2);
+        fetch(`https://api.covidactnow.org/v2/county/${stateAbbreviation}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then( response => response.json())
         .then( response => {
           let data = response;
           let selectedState = pathname.replace('/', '');
+          let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
+          handleGeographyClick(zoomState);
           setMapData(data);
-          setCurrentState(selectedState);          
-
-            console.log('counties json', geoJsonCounties.features)
-            //  state = 01 (from geoJsonCounties)
-            //  state = STATE (from geoJsonStates)
-            //  find the stated id 
-          // let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
-          // handleGeographyClick(zoomState);
-
+          setCurrentStateAbbreviation(stateAbbreviation);          
+        
       })
-    }, [state, pathname])
+    }, [pathname, search])
 
     const projection = () => {
       return geoTimes()
@@ -68,7 +46,6 @@ const StateMap = () => {
     }
 
     const handleGeographyClick = (geography, county) => {
-      console.log(geography, county)
       const path = geoPath().projection(projection());
       const centroid = projection().invert(path.centroid(geography));
 
@@ -79,30 +56,52 @@ const StateMap = () => {
     const handleFilter = ({ constructor: { name } }) => {
       return name !== "MouseEvent";
     };
-    console.log(currentState);
+
+    const riskLevelCheck = (num) => {
+        switch (num) {
+          case 0:
+            return "#00d474";
+          case 1:
+            return "#ffc900";
+          case 2:
+            return "#ff9600";
+          case 3:
+            return "#d9002c";
+          case 4:
+            return "#790019";
+          case 5: 
+            return "#790019";
+          default:  
+        }
+    };
+    
     return ( 
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
               <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
                   <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
-                       geographies.map( (geo, i) => {
-                        
+                     geographies.map( (geo, i) => {
+                        // add id as a state
                         let county = mapData.find( county => {
-                          
-                          return county.county === geo.properties.NAME + ' ' + geo.properties.LSAD;
+                          let geoCounty = `${geo.properties.NAME} ${geo.properties.LSAD}`;
+                          if(county.county === geoCounty && county.state === currentStateAbbreviation){
+                            console.log(county)
+                            return county;
+                          }
+                          return false;
                         });
-                          
+                      
                             return (
                                 <Geography 
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    // fill={ county ? riskLevelCheck(county.riskLevels.overall) : "#eee"}
-                                    // projection={`${projection}`}
-                                    // strokeWidth={ !county ? 0 : 2}
-                                    // fillOpacity={'1px'}
-                                    // onClick={() => handleGeographyClick(geo, county)}
-                                    // onMouseEnter={() => setTooltipContent(geo.properties.NAME + ' ' + geo.properties.LSAD)}
+                                    fill={ county ? riskLevelCheck(county.riskLevels.overall) : '#eee'}
+                                    projection={`${projection}`}
+                                    strokeWidth={ !county ? 0 : 2}
+                                    fillOpacity={'2px'}
+                                    // // onClick={() => handleGeographyClick(geo, county)}
+                                    onMouseEnter={() => setTooltipContent(`${geo.properties.NAME} ${geo.properties.LSAD} - ${county ? county.riskLevels.overall : 'none'}`)}
                                     style={{
                                       default: { outline: "none" },
                                       hover: { outline: "none" },
