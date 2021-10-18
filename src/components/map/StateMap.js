@@ -20,7 +20,7 @@ const StateMap = () => {
     const [tooltipContent, setTooltipContent] = useState("");
     const [center, setCenter] = useState([-90, 30])
     const [zoom, setZoom] = useState(3);
-    const [currentStateAbbreviation, setCurrentStateAbbreviation] = useState(null);
+    const [currentStateId, setCurrentStateId] = useState(null);
     const { pathname, search } = useLocation();
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const StateMap = () => {
           let zoomState = geoJsonStates.features.find( state => state.properties.NAME === selectedState);
           handleGeographyClick(zoomState);
           setMapData(data);
-          setCurrentStateAbbreviation(stateAbbreviation);          
+          setCurrentStateId(stateId);          
         
       })
     }, [pathname, search])
@@ -85,8 +85,7 @@ const StateMap = () => {
                         // add id as a state
                         let county = mapData.find( county => {
                           let geoCounty = `${geo.properties.NAME} ${geo.properties.LSAD}`;
-                          if(county.county === geoCounty && county.state === currentStateAbbreviation){
-                            console.log(county)
+                          if(county.county === geoCounty && geo.properties.STATE === currentStateId){
                             return county;
                           }
                           return false;
