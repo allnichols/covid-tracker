@@ -12,8 +12,6 @@ import geoJsonCounties from '../../geojson/counties.json';
 import geoJsonStates from '../../geojson/states.json';
 import ReactTooltip from 'react-tooltip';
 
-const geoCounties = "https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json";
-
 const StateMap = () => {
     const [mapData, setMapData] = useState([]);
     const [counties, setCounties] = useState([]);
@@ -47,6 +45,8 @@ const StateMap = () => {
 
     const handleGeographyClick = (geography, county) => {
       const path = geoPath().projection(projection());
+      const bounds = path.bounds(geography);
+      console.log(bounds)
       const centroid = projection().invert(path.centroid(geography));
 
       setCenter(centroid);
@@ -78,7 +78,7 @@ const StateMap = () => {
     return ( 
         <>
             <ComposableMap data-tip="" projection="geoAlbersUsa">
-              <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom}>
+              <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom} translateExtent={[[0, -100], [50, 100]]}>
                   <Geographies geography={geoJsonCounties}>
                     {({ geographies }) => 
                      geographies.map( (geo, i) => {
@@ -100,7 +100,7 @@ const StateMap = () => {
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'2px'}
                                     // // onClick={() => handleGeographyClick(geo, county)}
-                                    onMouseEnter={() => setTooltipContent(`${geo.properties.NAME} ${geo.properties.LSAD} - ${county ? county.riskLevels.overall : 'none'}`)}
+                                    onMouseEnter={() => setTooltipContent(`${geo.properties.NAME} ${geo.properties.LSAD}`)}
                                     style={{
                                       default: { outline: "none" },
                                       hover: { outline: "none" },
