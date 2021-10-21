@@ -43,12 +43,14 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography, county) => {
-      const path = geoPath().projection(projection());
+    const handleGeographyClick = (geography, projection, path, county) => {
+      // const path = geoPath().projection(projection());
       const bounds = path.bounds(geography);
-      console.log(bounds)
+      
+      const dx = bounds[1][0] - bounds[0][0];
+      const dy = bounds[1][1] - bounds[0][1];
       const centroid = projection().invert(path.centroid(geography));
-
+     console.log(geography)
       setCenter(centroid);
       setZoom(3);
     };
@@ -80,7 +82,7 @@ const StateMap = () => {
             <ComposableMap data-tip="" projection="geoAlbersUsa">
               <ZoomableGroup filterZoomEvent={handleFilter} center={center} zoom={zoom} translateExtent={[[0, -100], [50, 100]]}>
                   <Geographies geography={geoJsonCounties}>
-                    {({ geographies }) => 
+                    {({ geographies, projection, path }) => 
                      geographies.map( (geo, i) => {
                         // add id as a state
                         let county = mapData.find( county => {
@@ -99,7 +101,7 @@ const StateMap = () => {
                                     projection={`${projection}`}
                                     strokeWidth={ !county ? 0 : 2}
                                     fillOpacity={'2px'}
-                                    // // onClick={() => handleGeographyClick(geo, county)}
+                                    onClick={() => handleGeographyClick(geo, projection, path, county)}
                                     onMouseEnter={() => setTooltipContent(`${geo.properties.NAME} ${geo.properties.LSAD}`)}
                                     style={{
                                       default: { outline: "none" },
