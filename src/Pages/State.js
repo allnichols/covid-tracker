@@ -74,11 +74,7 @@ const State = ({ state }) => {
                         />
                     </Box>
                 </GridItem>
-                <GridItem rowSpan={2} colSpan={{lg: 2}} alignSelf="stretch">
-                    <Box h="100%" overflow="hidden" borderRadius="10px" border="1px solid grey">
-                        <StateMap />
-                    </Box>
-                </GridItem>
+                
             </Grid>
             }
         </Container>

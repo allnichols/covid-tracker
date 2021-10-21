@@ -44,14 +44,14 @@ const StateMap = () => {
       .scale(160)
     }
 
-    const handleGeographyClick = (geography, county) => {
-      const path = geoPath().projection(projection());
+    const handleGeographyClick = (geography, projection, path, county) => {
+      // const path = geoPath().projection(projection());
       const bounds = path.bounds(geography);
-
+      
       const dx = bounds[1][0] - bounds[0][0];
       const dy = bounds[1][1] - bounds[0][1];
       const centroid = projection().invert(path.centroid(geography));
-    
+     console.log(geography)
       setCenter(centroid);
       setZoom(3);
     };
