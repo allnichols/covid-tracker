@@ -12,15 +12,13 @@ const USA = () => {
     const [ref, dimensions] = useChartDimensions({ marginRight: 75 });
     console.log(dimensions);
     return (
-        <Container centerContent maxW="container.md" marginTop="24px">
+        <Container centerContent maxW="container.lg" marginTop="24px">
             <SearchBar />
-                <Heading as="h2" size="xl" textAlign="center" marginBottom="-35px">Risk Levels</Heading>
+            <Heading as="h2" size="xl" textAlign="center" mt="1rem">Risk Levels</Heading>
             <Box minW="100%" h="500px" ref={ref}>
-                
-                <UsaMap dimensions={dimensions}/>
-                <MapLegend />
+                <UsaMap dimensions={dimensions} />
             </Box>
-
+            <MapLegend />
         </Container>
     );
 }

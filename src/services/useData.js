@@ -9,10 +9,13 @@ export const useDataStates = () => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        json(statesUrl).then(data => {
-            const states = feature(data, data.objects.states);
-            const counties = mesh(data, data.objects.states, (a, b) => a !== b);
-            setData({ states, counties });
+        json(statesUrl).then(topology => {
+            const { states } = topology.objects;
+            
+            setData({
+                land: feature(topology, states),
+                states: mesh(topology, states, (a, b) => a !== b)
+            });
         });
     }, []);
 
