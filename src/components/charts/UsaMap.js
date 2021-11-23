@@ -39,15 +39,15 @@ export const UsaMap = ({ dimensions }) => {
   }, []);
 
   if (!mapData || !data) return null;
-  console.log(tooltipContent)
+
   return (
-    <>
+    <div data-tip="">
       <Chart dimensions={dimensions}>
         {data.land.features.map((feature, i) => {
           let state = mapData.find(state => state.fips === feature.id);
           if (state) {
             return (
-              <Link key={state.fips} to={`${feature.properties.name}`}>
+              <Link key={state.fips} to={`${state.fips}?state=${feature.properties.name}-${state.state}`}>
                 <path
                   key={`path-${i}`}
                   d={path(feature)}
@@ -57,11 +57,11 @@ export const UsaMap = ({ dimensions }) => {
                 />
               </Link>
             );
-          }
+          } return null;
         })}
         <path fill="none" d={path(data.states)} />
       </Chart>
       <ReactTooltip>{tooltipContent}</ReactTooltip>
-    </>
+    </div>
   );
 }

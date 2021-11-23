@@ -3,20 +3,20 @@ import { Container, Text, Grid, GridItem, Flex, Box, Skeleton, Progress } from '
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { motion } from "framer-motion"
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
-import StateMap from '../components/map/StateMap';
 
 const State = ({ state }) => {
-    let { pathname } = useLocation();
+    let params = useParams();
     let [ data, setData ] = useState(null);
     
     useEffect(() => {
-        let stateAbbreviation = state.substring(0,2);
+        let stateAbbreviation = state.split('-')[1];
         fetch(`https://api.covidactnow.org/v2/state/${stateAbbreviation}.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
         .then(response => response.json())
         .then(response => {
             let metrics = response.metrics;
+            console.log(metrics)
             setData(metrics);
         })
     }, [state]);
@@ -29,7 +29,7 @@ const State = ({ state }) => {
             textTransform="capitalize"
             fontWeight="bold"
             fontSize="2rem">
-                {pathname.replace('/', '')}
+                {state.split('-')[0]}
             </Text>
 
             { data === null ? 
