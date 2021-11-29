@@ -65,6 +65,7 @@ const SearchBar = () => {
         
         return (
           <SearchItem 
+           key={item.url}
            stateName={stateName} 
            fips={fips}
            riskLevel={riskLevelNum} 

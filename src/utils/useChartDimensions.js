@@ -29,12 +29,13 @@ export const combineChartDimensions = (dimensions) => {
 
 export const useChartDimensions = (passedSettings) => {
   const ref = useRef();
+  console.log(ref)
   const dimensions = combineChartDimensions(passedSettings);
   const [width, changeWidth] = useState(0);
   const [height, changeHeight] = useState(0);
 
   useEffect(() => {
-    // if (dimensions.width && dimensions.height) return [ref, dimensions];
+    if (dimensions.width && dimensions.height) return [ref, dimensions];
 
     const element = ref.current;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -48,6 +49,7 @@ export const useChartDimensions = (passedSettings) => {
       if (height !== entry.contentRect.height)
         changeHeight(entry.contentRect.height);
     });
+    console.log(element);
 
     resizeObserver.observe(element);
     return () => resizeObserver.unobserve(element);
