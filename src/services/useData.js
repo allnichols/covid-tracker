@@ -22,14 +22,17 @@ export const useDataStates = () => {
     return data;
 }
 
-export const useDataCounties = () => {
+export const useCountyData = () => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        json(usaUrl).then(data => {
-            const counties = feature(data, data.objects.counties);
-            setData(counties);
-        });
+        json(usaUrl).then( topology => {
+            const { states, counties } = topology.objects;
+            setData({
+                state: feature(topology, states),
+                counties: mesh(topology, counties)
+            }) 
+        })
     }, []);
 
     return data;

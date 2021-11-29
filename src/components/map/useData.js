@@ -20,3 +20,19 @@ export const useData = () => {
 
     return data;
 }
+
+export const useCountyData = () => {
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        json(usa).then( topology => {
+            const { states, counties } = topology.objects;
+            setData({
+                state: feature(topology, states),
+                counties: mesh(topology, counties)
+            }) 
+        })
+    }, []);
+
+    return data;
+}

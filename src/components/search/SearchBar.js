@@ -13,7 +13,6 @@ const SearchBar = () => {
   }, []);
 
   const getDataFromApi = () => {
-     
     fetch(`https://api.covidactnow.org/v2/states.json?apiKey=db851a7fa0434131ad626738b50e2c0a`)
       .then( function(response){
         return response.json()
@@ -58,18 +57,20 @@ const SearchBar = () => {
       display="flex"
       flexDirection="column">
       {filtered.map( item => {
-        let stateName = item.url.replaceAll('https://covidactnow.org/us/', '');
+        let stateName = item.url.replaceAll('https://covidactnow.org/us/', '').replaceAll('_', ' ').replaceAll('-', ' ');
         let stateAbbreviation = item.state;
         let riskLevelNum = item.riskLevels.overall;
         let population = item.population;
+        let fips = item.fips;
         
         return (
           <SearchItem 
-           name={stateName} 
+           stateName={stateName} 
+           fips={fips}
            riskLevel={riskLevelNum} 
            population={population}
-           stateAbbreviation={stateAbbreviation} />
-           
+           stateAbbreviation={stateAbbreviation} 
+           />
           )
       })}
       </Box>
