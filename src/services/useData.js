@@ -29,8 +29,10 @@ export const useCountyData = () => {
         json(usaUrl).then( topology => {
             const { states, counties } = topology.objects;
             setData({
-                state: feature(topology, states),
-                counties: mesh(topology, counties)
+                land: feature(topology, counties),
+                counties: mesh(topology, counties, (a, b) => a !== b),
+                states: feature(topology, states),
+                stateBorders: mesh(topology, states, (a, b) => a !== b)
             }) 
         })
     }, []);

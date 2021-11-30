@@ -3,11 +3,9 @@ import { Box } from '@chakra-ui/react';
 import { geoAlbersUsa, geoPath } from 'd3-geo';
 import { useParams,  useLocation } from 'react-router-dom';
 import { useCountyData } from '../../services/useData';
-import { useChartDimensions } from '../../utils/useChartDimensions';
 import Chart from './Chart';
 
 export const StateMap = ({ dimensions }) => {
-    // const [ref, dimensions] = useChartDimensions();
     const stateMap = useCountyData();
     const params = useParams();
     const location = useLocation();
@@ -20,20 +18,31 @@ export const StateMap = ({ dimensions }) => {
                 // console.log(response);
             })
     }, []);
-    console.log( dimensions);
-    if(!stateMap) return null;
 
+    const projection = geoAlbersUsa()
+        .scale([dimensions.width])
+        .translate([dimensions.width / 2, dimensions.height / 2]);
+    const path = geoPath(projection)
+    
+    if(!stateMap) return null;
+    
     return (
         
             <Chart dimensions={dimensions}>
-                {/* {stateMap.features.map((feature, i) => {
+                <g>
+                {stateMap.land.features.map((feature, i) => {
+                    
                     return (
                         <path
                             key={`path-${i}`}
-                           
+                            stroke="white"
+                            fill="none"
+                            d={path(feature)}
                         />
                     );
-                })} */}
+                })}
+                </g>
+                <path fill="white" path={path(stateMap.states)} />
             </Chart>
         
     )
