@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Text, Grid, GridItem, Flex, Box, Skeleton, Progress } from '@chakra-ui/react';
+import { Container, Text, Grid, GridItem, Flex, Box, Progress } from '@chakra-ui/react';
 import { riskLevelCaseDensity, riskLevelInfectionRate, riskLevelPositiveRate } from '../utils/riskLevel';
 import { useParams } from 'react-router-dom';
 import RiskLegend from '../components/legend/RiskLegend';
 import StatBox from '../components/statBox/StatBox';
-import { StateMap } from '../components/charts/StateMap';
-import { useChartDimensions } from '../utils/useChartDimensions';
 
 const State = ({ state }) => {
     const params = useParams();
@@ -71,7 +69,6 @@ const State = ({ state }) => {
                         </Box>
                     </GridItem>
                 </Grid>
-
             </Container>
         </Box>
 
