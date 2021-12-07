@@ -20,7 +20,8 @@ const urls = [
 ]
 
 const DataTable = ({ isStateLevel }) => {
-  const [data, setData] = useState([]);
+  const [states, setStates] = useState([]);
+  const [counties, setCounties] = useState([]);
 
   useEffect(() => {
     // map every url to the promise of the fetch
@@ -29,9 +30,30 @@ const DataTable = ({ isStateLevel }) => {
     Promise.all(requests)
       .then(responses => Promise.all(responses.map(r => r.json())))
       .then(data => {
-        let states = data[0]
-        let counties = data[1]
+        let states = data[0].map(state => {
+          return {
+            actuals: state.actuals,
+            population: state.population,
+            name: state.state,
+            url: state.url,
+            fips: state.fips,
+            metrics: state.metrics
+          }
+        });
+        let counties = data[1].map(county => {
+          return {
+            actuals: county.actuals,
+            population: county.population,
+            name: county.county,
+            state: county.state,
+            url: county.url,
+            fips: county.fips,
+            metrics: county.metrics
+          }
+        });
         console.log(states)
+        setStates(states);
+        setCounties(counties);
       })
   }, [])
 
@@ -43,10 +65,32 @@ const DataTable = ({ isStateLevel }) => {
           <Button colorScheme="blue" variant="outline">County</Button>
         </ButtonGroup>
       </Box>
+      <Box border="1px solid lightgrey" borderRadius="10px">
+        <Table size="md">
+          <TableCaption>Imperial to metric conversion factors</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>State Population</Th>
+              <Th isNumeric>New Cases</Th>
+              <Th isNumeric>Infection Rate</Th>
+              <Th isNumeric>Positive Test Rate</Th>
+              <Th>Vaccinated (+1 Dose)</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {states.length > 0 && states.map(state => (
+              <Tr key={state.fips}>
+                <Td>{state.population}{state.name}</Td>
+                <Td isNumeric>{state.actuals.newCases ? state.actuals.newCases : <span>Missing</span>}</Td>
+                <Td isNumeric>{state.metrics.infectionRate}</Td>
+                <Td isNumeric>{state.actuals.positiveTests}</Td>
+                <Td>{state.actuals.vaccinationsCompleted}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
-      <Table variant="striped">
-
-      </Table>
     </>
   );
 }
